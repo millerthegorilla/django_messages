@@ -1,5 +1,5 @@
 # django_messages
-a django app that provides basic message functionality, as a foundation for other apps.  It has a simple model from which other models can extend, or you can use django_messages on its own to provide a basic message model.
+a django app that provides basic message functionality, as a foundation for other apps.  It has a simple model from which other models can extend, or you can use django_messages on its own to provide a basic message model.  It uses soft deletion, so that messages, or models that extend from it, can be soft deleted, at which point a task is set up using the very excellent django_q to schedule a hard delete at a time later configured in the settings.
 
 ## install
 pip install git+https://github.com/millerthegorilla/django_messages.git#egg=django_messages
@@ -18,6 +18,10 @@ You will need to set the site domain in the admin app, and also the settings.BAS
 You can make the app abstract if you are subclassing it in another app.
 ```
 ABSTRACTMESSAGE = True
+```
+You can set the timeout before messages (or subclasses of msg - even when message is abstract) are hard deleted.  This effectively means that there will be a copy of a message, for some period of time before it is erased permanently.
+```
+DELETION_TIMEOUT = { 'POST'(ie model name as string): 'timezone.timedelta(days=21)' }
 ```
 ## dependencies
 django-crispy-forms==1.11.2
