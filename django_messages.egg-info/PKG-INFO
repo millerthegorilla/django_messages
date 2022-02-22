@@ -1,0 +1,52 @@
+Metadata-Version: 2.1
+Name: django-messages
+Version: 1.0
+Summary: A Django app that provides a basic message model, that can be used on its own or made abstract and extended.
+Home-page: https://github.com/millerthegorilla/django_messages
+Author: James Miller
+Author-email: jamesstewartmiller@gmail.com
+License: MiT  # Example license
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 3.2.9  # Replace "X.Y" as appropriate
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Requires-Python: >=3.8
+Description-Content-Type: 'text/markdown'
+License-File: LICENSE
+
+# django_messages
+a django app that provides basic message functionality, as a foundation for other apps.  It has a simple model from which other models can extend, or you can use django_messages on its own to provide a basic message model.
+
+## install
+pip install git+https://github.com/millerthegorilla/django_messages.git#egg=django_messages
+add django_messages to your installed apps.
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    ...
+    'django_messages',
+]
+```
+## settings
+You will need to set the site domain in the admin app, and also the settings.BASE_HTML for the statement `{% extends BASE_HTML %}` in the templates where BASE_HTML comes from the context_processor.
+
+You can make the app abstract if you are subclassing it in another app.
+```
+ABSTRACTMESSAGE = True
+```
+## dependencies
+django-crispy-forms==1.11.2
+crispy-bootstrap==5 0.6
+bleach==3.3.0
+
