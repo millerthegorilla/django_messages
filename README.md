@@ -21,9 +21,28 @@ ABSTRACTMESSAGE = True
 ```
 You can set the timeout before messages (or subclasses of msg - even when message is abstract) are hard deleted.  This effectively means that there will be a copy of a message, for some period of time before it is erased permanently.
 ```
-DELETION_TIMEOUT = { 'POST'(ie model name as string): 'timezone.timedelta(days=21)' }
+DELETION_TIMEOUT = { 'Message'(ie model name as string): 'timezone.timedelta(days=21)' }
+```
+bleach is used to sanitize the text in messages.  Its settings are as follows...
+```
+ALLOWED_TAGS = [
+    'a', 'div', 'p', 'span', 'img', 'iframe', 'em', 'i', 'li', 'ol', 'ul', 'strong', 'br',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'tbody', 'thead', 'tr', 'td',
+    'abbr', 'acronym', 'b', 'blockquote', 'code', 'strike', 'u', 'sup', 'sub',
+]
+
+STYLES = [
+    'background-color', 'font-size', 'line-height', 'color', 'font-family'
+]
+
+ATTRIBUTES = {
+    '*': ['style', 'align', 'title', ],
+    'a': ['href', ],
+    'iframe': ['src', 'height', 'width', 'allowfullscreen'],
+}
 ```
 ## dependencies
 django-crispy-forms==1.11.2
-crispy-bootstrap==5 0.6
+crispy-bootstrap5==5.0.6
 bleach==3.3.0
