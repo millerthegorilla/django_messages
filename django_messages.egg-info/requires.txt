@@ -1,1 +1,1 @@
-django_profile@ git+https://github.com/millerthegorilla/django_profile
+django_profile@ git+https://github.com/millerthegorilla/django_profile@main
