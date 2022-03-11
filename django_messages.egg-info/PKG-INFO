@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: django-messages
 Version: 1.0
-Summary: A Django app that provides a basic message model, that can be used on its own or made abstract and extended.
+Summary: "A Django app that provides a basic message model, that can be used on its own or optionally made abstract and then extended."
 Home-page: https://github.com/millerthegorilla/django_messages
 Author: James Miller
 Author-email: jamesstewartmiller@gmail.com
@@ -25,7 +25,7 @@ Description-Content-Type: 'text/markdown'
 License-File: LICENSE
 
 # django_messages
-a django app that provides basic message functionality, as a foundation for other apps.  It has a simple model from which other models can extend, or you can use django_messages on its own to provide a basic message model.
+a django app that provides basic message functionality, as a foundation for other apps.  It has a simple model from which other models can extend, or you can use django_messages on its own to provide a basic message model.  It uses soft deletion, so that messages, or models that extend from it, can be soft deleted, at which point a task is set up using the very excellent django_q to schedule a hard delete at a time later configured in the settings.
 
 ## install
 pip install git+https://github.com/millerthegorilla/django_messages.git#egg=django_messages
@@ -45,8 +45,31 @@ You can make the app abstract if you are subclassing it in another app.
 ```
 ABSTRACTMESSAGE = True
 ```
+You can set the timeout before messages (or subclasses of msg - even when message is abstract) are hard deleted.  This effectively means that there will be a copy of a message, for some period of time before it is erased permanently.
+```
+DELETION_TIMEOUT = { 'Message'(ie model name as string): 'timezone.timedelta(days=21)' }
+```
+bleach is used to sanitize the text in messages.  Its settings are as follows...
+```
+ALLOWED_TAGS = [
+    'a', 'div', 'p', 'span', 'img', 'iframe', 'em', 'i', 'li', 'ol', 'ul', 'strong', 'br',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'tbody', 'thead', 'tr', 'td',
+    'abbr', 'acronym', 'b', 'blockquote', 'code', 'strike', 'u', 'sup', 'sub',
+]
+
+STYLES = [
+    'background-color', 'font-size', 'line-height', 'color', 'font-family'
+]
+
+ATTRIBUTES = {
+    '*': ['style', 'align', 'title', ],
+    'a': ['href', ],
+    'iframe': ['src', 'height', 'width', 'allowfullscreen'],
+}
+```
 ## dependencies
 django-crispy-forms==1.11.2
-crispy-bootstrap==5 0.6
+crispy-bootstrap5==5.0.6
 bleach==3.3.0
 
