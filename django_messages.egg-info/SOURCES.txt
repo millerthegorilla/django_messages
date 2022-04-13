@@ -29,7 +29,6 @@ django_messages/__pycache__/models.cpython-310.pyc
 django_messages/__pycache__/soft_deletion.cpython-310.pyc
 django_messages/__pycache__/urls.cpython-310.pyc
 django_messages/__pycache__/views.cpython-310.pyc
-django_messages/migrations/0001_initial.py
 django_messages/migrations/__init__.py
 django_messages/migrations/__pycache__/0001_initial.cpython-310.pyc
 django_messages/migrations/__pycache__/__init__.cpython-310.pyc
