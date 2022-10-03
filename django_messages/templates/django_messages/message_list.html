@@ -1,10 +1,10 @@
 {% extends BASE_HTML %}
-{% block title %}{{ siteName }} - Forum Posts{% endblock title %}
+{% block title %}{{ siteName }} - Message list{% endblock title %}
 {% block content %}
     {% if not page_obj.object_list.exists %}
         <div class="row">
             <div class="col-auto mx-auto mt-5">
-                <p><h3>There are currently no posts in the forum.  Why not <a href="{% url 'django_messages:message_create' %}">add</a> one...?</h3></p>
+                <p><h3>There are currently no messages.  Why not <a href="{% url 'django_messages:message_create' %}">add</a> one...?</h3></p>
             </div>
         </div>
     {% else %}

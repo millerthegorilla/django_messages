@@ -1,4 +1,3 @@
-import datetime
 import uuid
 import logging
 
@@ -12,16 +11,14 @@ from django_q import tasks
 # The below is from https://adriennedomingus.com/blog/soft-deletion-in-django
 # with djangoq added... :)
 
-logger = logging.getLogger('django_artisan')
+logger = logging.getLogger("django_artisan")
 
 
 class QuerySet(models.query.QuerySet):
     def delete(self) -> int:
         for q in self.all():
             q.delete()
-        return super(
-            QuerySet,
-            self)
+        return super(QuerySet, self)
 
     def hard_delete(self) -> tuple[int, dict]:
         return super(QuerySet, self).delete()
@@ -35,7 +32,7 @@ class QuerySet(models.query.QuerySet):
 
 class Manager(models.Manager):
     def __init__(self, *args, **kwargs) -> None:
-        self.alive_only = kwargs.pop('alive_only', True)
+        self.alive_only = kwargs.pop("alive_only", True)
         super(Manager, self).__init__(*args, **kwargs)
 
     def get_queryset(self) -> models.query.QuerySet:
@@ -48,7 +45,7 @@ class Manager(models.Manager):
 
 
 class Model(models.Model):
-    active: models.BooleanField = models.BooleanField(default='True')
+    active: models.BooleanField = models.BooleanField(default="True")
     deleted_at = models.DateTimeField(blank=True, null=True)
     objects = Manager()
     all_objects = Manager(alive_only=False)
@@ -56,30 +53,37 @@ class Model(models.Model):
     class Meta:
         abstract = True
 
-    def delete(self, deletion_timeout:timezone.timedelta = None) -> None:
+    def delete(self, deletion_timeout: timezone.timedelta = None) -> None:
         if self.active:
             self.deleted_at = utils.timezone.now()
-            self.active=False
-            self.save(update_fields=['deleted_at', 'active'])
-            to = conf.settings.DELETION_TIMEOUT.get(str(self), 
-                                 deletion_timeout if deletion_timeout else timezone.timedelta(days=21))
+            self.active = False
+            self.save(update_fields=["deleted_at", "active"])
+            # can override by defining deletion_timeout
+            timeout = conf.settings.DELETION_TIMEOUT.get(
+                str(self),
+                deletion_timeout if deletion_timeout else timezone.timedelta(days=21),
+            )
             try:
-                tasks.schedule('django_messages.tasks.schedule_hard_delete',
-                         name="sd_timeout_" + str(uuid.uuid4()),
-                         schedule_type="O",
-                         repeats=-1,
-                         next_run=utils.timezone.now() + conf.settings.DELETION_TIMEOUT,
-                         slug=self.slug,
-                         deleted_at=str(self.deleted_at),
-                         type=str(self),  # TODO test that the string repr of the model is going to refer to it.
-                         id=str(self.id))
+                tasks.schedule(
+                    "django_messages.tasks.schedule_hard_delete",
+                    name="sd_timeout_" + str(uuid.uuid4()),
+                    schedule_type="O",
+                    repeats=-1,
+                    next_run=utils.timezone.now() + timeout,
+                    slug=self.slug,
+                    deleted_at=str(self.deleted_at),
+                    text=str(self),  # TODO test that the string repr of the model
+                    # is going to refer to it.
+                    id=str(self.id),
+                )
             except Exception as e:
+                breakpoint()
                 logger.error("unable to schedule task : {0}".format(str(e)))
 
     def hard_delete(self) -> None:
-        '''
-             called by posts_and_comments.tasks.schedule_hard_delete
-        '''
+        """
+        called by posts_and_comments.tasks.schedule_hard_delete
+        """
         super(Model, self).delete()
 
 

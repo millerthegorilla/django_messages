@@ -1,0 +1,9 @@
+---
+- name: provisioning django_messages testapp
+  hosts: localhost
+  tasks:
+  - name: Stop and Remove Redis Container
+    containers.podman.podman_container:
+      name: myredis
+      image: docker.io/library/redis
+      state: absent

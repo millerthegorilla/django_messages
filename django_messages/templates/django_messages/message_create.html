@@ -10,6 +10,7 @@
 	{% block content %}
         <div class="container"> 
 			<div class="row vh-100">
+				<span class="instructions"><h4>{{ instructions }}</h4></span>
 				<form method="post" class="col-10 col-sm-10 col-md-8 mx-auto">{% csrf_token %}
 				    {% crispy form %}
 				</form>

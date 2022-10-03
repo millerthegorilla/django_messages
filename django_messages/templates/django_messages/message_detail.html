@@ -1,5 +1,5 @@
 {% extends BASE_HTML %}
-{% block title %}{{ siteName }} - Message{% endblock title %}
+{% block title %}{{ siteName }} Message {{ message.id|safe }}{% endblock title %}
 {% block form_media %}
 {% load static %}
  <script src="{% static 'tinymce/tinymce.min.js' %}" referrerpolicy="origin"></script>
@@ -12,13 +12,7 @@
 		<div id='msg_text' class="col-12 col-sm-11 col-md-10 col-lg-8 mx-auto my-auto">
 			<div class="row align-items-end">
 				<div class="col-auto">
-				        <h3>{{ message.id|safe }} <span class="text-dark ps-2">by</span></h3>
-			    </div>
-			    <div class="col-auto">
-			    	<h4>{{ message.author }}<span class="text-dark ps-3">on</span></h4>
-			    </div>
-			    <div class="col-auto">
-			    	<h6>{{ message.created_at }}</h6>
+				        <h3>Message {{ message.id|safe }} <span class="text-dark ps-2">by {{ message.author }} on {{ message.created_at }}</span></h3>
 			    </div>
 			</div>
 			<div class="row ms-auto">

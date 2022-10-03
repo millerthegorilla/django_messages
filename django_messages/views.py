@@ -1,113 +1,52 @@
-import bleach, html, logging, typing
+import logging
 
-from django import conf, urls, utils, db, shortcuts, http
-from django.core import exceptions, paginator as pagination
+from django import urls, utils
+from django.contrib.auth import get_user_model
 from django.views import generic
-from django.template import defaultfilters
 
-from django import db
 from django.views.decorators import cache
-from django.contrib.auth import mixins
 
 from . import models as messages_models
 from . import forms as messages_forms
 
-logger = logging.getLogger('django_artisan')
+User = get_user_model()
 
-def sanitize_post_text(text: str) -> utils.safestring.SafeString:
-    return utils.safestring.mark_safe(bleach.clean(html.unescape(text),
-                                  tags=conf.settings.ALLOWED_TAGS,
-                                  attributes=conf.settings.ATTRIBUTES,
-                                  styles=conf.settings.STYLES,
-                                  strip=True, strip_comments=True))
+logger = logging.getLogger("django_artisan")
 
 
-@utils.decorators.method_decorator(cache.never_cache, name='dispatch')
+@utils.decorators.method_decorator(cache.never_cache, name="dispatch")
 class MessageList(generic.list.ListView):
     model = messages_models.Message
-    template_name = 'django_messages/message_list.html'
+    template_name = "django_messages/message_list.html"
     paginate_by = 6
 
-    def get(self, request: http.HttpRequest) -> http.HttpResponse:
-        queryset = messages_models.Message.objects.all()
-        paginator = pagination.Paginator(queryset, 6)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context = {'page_obj': page_obj}
-        return shortcuts.render(request, self.template_name, context)
 
-
-@utils.decorators.method_decorator(cache.never_cache, name='dispatch')
-@utils.decorators.method_decorator(cache.never_cache, name='get')
+@utils.decorators.method_decorator(cache.never_cache, name="dispatch")
+@utils.decorators.method_decorator(cache.never_cache, name="get")
 class MessageView(generic.DetailView):
-    """
-        TODO: replace the single view/many form processing with separate urls for
-              each form action, pointing to individual views, each with its own form class,
-              each redirecting to this url/view with its get_context_data, for all forms.
-    """
     model = messages_models.Message
-    slug_url_kwarg = 'slug'
-    slug_field = 'slug'
-    template_name = 'django_messages/message_detail.html'
+    slug_url_kwarg = "slug"
+    slug_field = "slug"
+    template_name = "django_messages/message_detail.html"
     form_class = messages_forms.Message
-
-    def get(self, *args, **kwargs) -> http.HttpResponse:
-        message = self.model.objects.get(pk=kwargs['pk'])
-        return shortcuts.render(self.request,
-                      self.template_name,
-                      { 'message': message })
-
-    def post(self, *args, **kwargs):
-        if self.request.POST['update-msg']:
-            msg = self.model.objects.get(pk=kwargs['pk'], slug=kwargs['slug'])
-            msg.text = self.request.POST['update-msg']
-            msg.save()
-        return shortcuts.redirect(self.get_success_url(msg))
-
-    def get_success_url(self, message, *args, **kwargs) -> str:
-        return urls.reverse_lazy(
-            'django_messages:message_view', args=(
-                message.id, message.slug,))
+    context_object_name = "message"
 
 
-class MessageUpdate(generic.detail.DetailView):
+class MessageUpdate(generic.UpdateView):
     model = messages_models.Message
-    template_name = 'django_messages/message_detail.html'
+    form_class = messages_forms.Message
+    template_name_suffix = "_create"
+    extra_context = {"instructions": "Update your message..."}
 
 
 class MessageDelete(generic.edit.DeleteView):
     model = messages_models.Message
-    template_name = 'django_messages/message_detail.html'
-    success_url = urls.reverse_lazy('django_messages:message_list')
+    template_name = "django_messages/message_delete.html"
+    success_url = urls.reverse_lazy("django_messages:message_list")
 
 
 class MessageCreate(generic.edit.CreateView):
     model = messages_models.Message
-    template_name_suffix = '_create'
-    #template_name = 'django_messages/message_create.html'
+    template_name_suffix = "_create"
     form_class = messages_forms.Message
-
-    def form_valid(self, form, message: messages_models.Message = None, **kwargs) -> http.HttpResponseRedirect:
-        passed_message = False
-        if message is None:
-            message = form.save(commit=False)
-        else:
-            passed_message=True
-        message.text = sanitize_post_text(message.text)       
-        message.author = self.request.user
-        message.slug = defaultfilters.slugify(
-            message.text[:10] + '-' + str(utils.dateformat.format(utils.timezone.now(), 'Y-m-d H:i:s')))
-        #super().form_valid(form)
-        try:
-            message.save()
-        except db.IntegrityError as e:
-            logger.error("Unable to create message : " + str(e))
-        if passed_message:
-            return message
-        else:
-            return shortcuts.redirect(self.get_success_url(message))
-
-    def get_success_url(self, message, *args, **kwargs) -> str:
-        return urls.reverse_lazy(
-            'django_messages:message_view', args=(
-                message.id, message.slug,))
+    extra_context = {"instructions": "Create your message..."}
