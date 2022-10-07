@@ -1,27 +1,18 @@
 Metadata-Version: 2.1
 Name: django-messages
-Version: 1.0
-Summary: "A Django app that provides a basic message model, that can be used on its own or optionally made abstract and then extended."
+Version: 0.0.1
+Summary: A simple django app that adds basic messaging
 Home-page: https://github.com/millerthegorilla/django_messages
+Download-URL: https://github.com/millerthegorilla/django_messages
 Author: James Miller
 Author-email: jamesstewartmiller@gmail.com
-License: MiT  # Example license
-Platform: UNKNOWN
-Classifier: Environment :: Web Environment
-Classifier: Framework :: Django
-Classifier: Framework :: Django :: 3.2.9  # Replace "X.Y" as appropriate
-Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: BSD License
-Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Topic :: Internet :: WWW/HTTP
-Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+License: MIT
+Keywords: django,django_messages,messages app
+Classifier: DevelopmentStatus::2-Pre-Alpha
+Classifier: Framework::Django CMS
+Classifier: Framework::Django::4.0
 Requires-Python: >=3.8
-Description-Content-Type: 'text/markdown'
+Description-Content-Type: text/markdown
 License-File: LICENSE
 
 # django_messages
@@ -72,4 +63,3 @@ ATTRIBUTES = {
 django-crispy-forms==1.11.2
 crispy-bootstrap5==5.0.6
 bleach==3.3.0
-

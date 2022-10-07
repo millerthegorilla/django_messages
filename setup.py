@@ -37,16 +37,16 @@ setup(
     # Link to your github repository or website:
     url="https://github.com/millerthegorilla/django_messages",
     # Download Link from where the project can be downloaded from:
-    download_url="",
+    download_url="https://github.com/millerthegorilla/django_messages",
     # List of keywords:
-    keywords=["django", "django_messages", "user app"],
+    keywords=["django", "django_messages", "messages app"],
     # List project dependencies:
     install_requires=[
         "django>=4.0.1",
         "django-q>=1.3.9",
         "bleach>=5.0.1",
         "django-crispy-forms>=1.14.0",
-        "crispy-boostrap>=5-0.6",
+        "crispy-boostrap>=5.0.6",
     ],
     # https://pypi.org/classifiers/
     classifiers=[
