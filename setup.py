@@ -46,7 +46,7 @@ setup(
         "django-q>=1.3.9",
         "bleach>=5.0.1",
         "django-crispy-forms>=1.14.0",
-        "crispy-bootstrap>=5.0.6",
+        "crispy-bootstrap5>=0.7",
     ],
     # https://pypi.org/classifiers/
     classifiers=[
