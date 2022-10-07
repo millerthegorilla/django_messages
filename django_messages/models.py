@@ -1,5 +1,3 @@
-import bleach
-import html
 from django import conf, urls, utils
 from django.db import models, DEFAULT_DB_ALIAS
 from django.contrib import auth
@@ -8,7 +6,9 @@ from django.template import defaultfilters
 
 from . import soft_deletion
 
-# Create your models here.
+# django_messages.forms.Message.sanitize_text is a static function that uses bleach
+# to sanitize text.  It is called in form.clean_text() but if you create a model,
+# and want to sanitize the text, you can do it manually.
 
 
 class Message(soft_deletion.Model):
@@ -50,26 +50,12 @@ class Message(soft_deletion.Model):
         using=DEFAULT_DB_ALIAS,
         update_fields=None,
     ):
-        self.sanitize_text(self.text)
         self.slug = defaultfilters.slugify(
             self.text[:10]
             + "-"
             + str(utils.dateformat.format(utils.timezone.now(), "Y-m-d H:i:s"))
         )
         super().save(force_insert, force_update, using, update_fields)
-
-    @staticmethod
-    def sanitize_text(text: str) -> utils.safestring.SafeString:
-        return utils.safestring.mark_safe(
-            bleach.clean(
-                html.unescape(text),
-                tags=conf.settings.ALLOWED_TAGS,
-                attributes=conf.settings.ATTRIBUTES,
-                css_sanitizer=conf.settings.CSS_SANITIZER,
-                strip=True,
-                strip_comments=True,
-            )
-        )
 
     class Meta:
         ordering = ["-created_at"]

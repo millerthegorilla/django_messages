@@ -13,6 +13,7 @@ ansible-playbook django_messages/testapp/ansible_setup_test.yml
 """
 
 
+# https://stackoverflow.com/a/42327075
 @contextmanager
 def not_raises(exception):
     try:

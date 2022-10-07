@@ -21,16 +21,7 @@ PAGES_DICT = {
 
 @pytest.fixture()
 def message_text():
-    return MESSAGE_TEXT
-
-
-@pytest.fixture()
-def test_message(db, message_text):
-    try:
-        message = message_models.Message.objects.get(text=message_text)
-    except message_models.Message.DoesNotExist:
-        message = message_models.Message.objects.create(text=message_text)
-    return message
+    return lambda: MESSAGE_TEXT
 
 
 @pytest.fixture()

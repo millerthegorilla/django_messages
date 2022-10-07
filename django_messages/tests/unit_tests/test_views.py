@@ -1,13 +1,10 @@
 import ast
 import pytest
+import redis
+from django_q import tasks
 from django_q.models import Schedule
 from django_messages import models as message_models
-
-ALLOWED_TEXT = '<h1 color="red" style="font-family: times;">bob me baby</h1>'
-DISALLOWED_TEXT = '<script>evil script</script><disallowed_tag style="word-break: normal"></disallowed_tag><span style="font-size: 3em; word-break: normal">bob</span>'  # noqa: E501
-
-ALLOWED_TEXT_POST_SANITIZE = ALLOWED_TEXT
-DISALLOWED_TEXT_POST_SANITIZE = 'evil script<span style="font-size: 3em;">bob</span>'
+from test_setup import not_raises
 
 NUM_OF_MESSAGES = 7
 
@@ -20,15 +17,6 @@ def test_message(db, message_text):
         return message_models.Message.objects.all()
 
     return new_message
-
-
-def test_text_is_sanitized():
-    assert ALLOWED_TEXT_POST_SANITIZE == message_models.Message.sanitize_text(
-        ALLOWED_TEXT
-    )
-    assert DISALLOWED_TEXT_POST_SANITIZE == message_models.Message.sanitize_text(
-        DISALLOWED_TEXT
-    )
 
 
 def test_message_list(test_message, client):
@@ -47,8 +35,10 @@ def test_message_view(test_message, client):
     assert response.template_name[0] == "django_messages/message_detail.html"
 
 
-@pytest.mark.locutus
 def test_message_delete(db, client, test_message):
+    brkr = tasks.get_broker()
+    with not_raises(redis.exceptions.ConnectionError):
+        assert brkr.ping() == True
     message = test_message(1)[0]
     response = client.get(f"/delete_message/{message.id}/{message.slug}/")
     assert "Are you sure you want to delete" in response.content.decode()
