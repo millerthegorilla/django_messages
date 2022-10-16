@@ -59,6 +59,8 @@ class Message(soft_deletion.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        app_label = "django_messages"
+
         try:
             abstract = conf.settings.ABSTRACTMESSAGE
         except AttributeError:
