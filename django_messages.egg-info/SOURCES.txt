@@ -4,6 +4,7 @@ README.md
 pyproject.toml
 setup.cfg
 setup.py
+django_messages/__init__.py
 django_messages/admin.py
 django_messages/apps.py
 django_messages/context_processors.py

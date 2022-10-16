@@ -11,5 +11,5 @@ from django import apps
 
 
 class DjangoMessagesConfig(apps.AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'django_messages'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "django_messages"
