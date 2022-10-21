@@ -1,7 +1,6 @@
 from crispy_forms import layout, helper
 
 from django import forms, utils, conf
-from django.template import defaultfilters
 
 import bleach
 import html
