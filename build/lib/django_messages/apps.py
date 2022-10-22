@@ -11,7 +11,6 @@ from crispy_bootstrap5 import templates as bs5_templates
 my_apps = [
     {"name": "django_q", "templates": ""},
     {"name": "crispy_forms", "templates": crispy_templates},
-    {"name": "crispy_forms_tags", "templates": ""},
     {"name": "crispy_bootstrap5", "templates": bs5_templates},
 ]
 
