@@ -1,4 +1,5 @@
 import os
+import importlib
 from collections import OrderedDict
 
 from django.apps import apps, AppConfig
@@ -22,6 +23,10 @@ class DjangoMessagesConfig(AppConfig):
     def ready(self) -> None:
         for app in APPS:
             if app["name"] not in settings.INSTALLED_APPS:
+                theapp = importlib.import_module(app["name"])
+                from theapp import apps as theapp_apps
+
+                theapp_apps.ready()
                 settings.INSTALLED_APPS += (app["name"],)
                 apps.app_configs = OrderedDict()
                 apps.apps_ready = apps.models_ready = apps.loading = apps.ready = False
