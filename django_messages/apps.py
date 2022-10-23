@@ -32,11 +32,11 @@ class DjangoMessagesConfig(AppConfig):
                     settings.TEMPLATES[0]["DIRS"].append(
                         os.path.abspath(app["templates"].__path__._path[0])
                     )
-                settings.STATICFILES_DIRS += [
-                    os.path.abspath(
-                        importlib.import_module(app["name"]).__path__[0] + "/static/"
-                    )
-                ]
+                static = os.path.abspath(
+                    importlib.import_module(app["name"]).__path__[0] + "/static/"
+                )
+                if os.path.isdir(static):
+                    settings.STATICFILES_DIRS += [static]
                 try:
                     theapp = importlib.import_module(app["name"] + ".apps")
                     my_apps += theapp.my_apps
