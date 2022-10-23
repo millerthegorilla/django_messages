@@ -23,11 +23,6 @@ class DjangoMessagesConfig(AppConfig):
         global my_apps
         for app in my_apps:
             if app["name"] not in settings.INSTALLED_APPS:
-                theapp = importlib.import_module(app["name"] + ".apps")
-                try:
-                    my_apps += theapp.my_apps
-                except AttributeError:
-                    pass
                 settings.INSTALLED_APPS += (app["name"],)
                 apps.app_configs = OrderedDict()
                 apps.apps_ready = apps.models_ready = apps.loading = apps.ready = False
@@ -37,3 +32,15 @@ class DjangoMessagesConfig(AppConfig):
                     settings.TEMPLATES[0]["DIRS"].append(
                         os.path.abspath(app["templates"].__path__._path[0])
                     )
+                settings.STATICFILES_DIRS += [
+                    os.path.abspath(
+                        importlib.import_module(app["name"]).__path__.path[0]
+                        + "/static/"
+                    )
+                ]
+                try:
+                    theapp = importlib.import_module(app["name"] + ".apps")
+                    my_apps += theapp.my_apps
+                    theapp.setup_apps()
+                except (ModuleNotFoundError, AttributeError):
+                    pass
