@@ -22,29 +22,29 @@ class DjangoMessagesConfig(AppConfig):
 
     def ready(self) -> None:
         global my_apps
-        sdir = False
+        # sdir = False
         for app in my_apps:
             if app["name"] not in settings.INSTALLED_APPS:
                 settings.INSTALLED_APPS += (app["name"],)
-                apps.app_configs = OrderedDict()
-                apps.apps_ready = apps.models_ready = apps.loading = apps.ready = False
-                apps.clear_cache()
-                apps.populate(settings.INSTALLED_APPS)
-                if app["templates"] != "":
-                    settings.TEMPLATES[0]["DIRS"].append(
-                        os.path.abspath(app["templates"].__path__._path[0])
-                    )
-                static = os.path.abspath(
-                    importlib.import_module(app["name"]).__path__[0] + "/static/"
-                )
-                if os.path.isdir(static):
-                    sdir = True
-                    settings.STATICFILES_DIRS += [static]
-                try:
-                    theapp = importlib.import_module(app["name"] + ".apps")
-                    my_apps += theapp.my_apps
-                    theapp.setup_apps()
-                except (ModuleNotFoundError, AttributeError):
-                    pass
-        if sdir:
-            call_command("collectstatic", verbosity=0, interactive=False)
+                # apps.app_configs = OrderedDict()
+                # apps.apps_ready = apps.models_ready = apps.loading = apps.ready = False
+                # apps.clear_cache()
+                # apps.populate(settings.INSTALLED_APPS)
+                # if app["templates"] != "":
+                #     settings.TEMPLATES[0]["DIRS"].append(
+                #         os.path.abspath(app["templates"].__path__._path[0])
+                #     )
+        #         static = os.path.abspath(
+        #             importlib.import_module(app["name"]).__path__[0] + "/static/"
+        #         )
+        #         if os.path.isdir(static):
+        #             sdir = True
+        #             settings.STATICFILES_DIRS += [static]
+        #         # try:
+        #         #     theapp = importlib.import_module(app["name"] + ".apps")
+        #         #     my_apps += theapp.my_apps
+        #         #     theapp.setup_apps()
+        #         # except (ModuleNotFoundError, AttributeError):
+        #         #     pass
+        # if sdir:
+        #     call_command("collectstatic", verbosity=0, interactive=False)
