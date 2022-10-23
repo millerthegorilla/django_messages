@@ -49,21 +49,19 @@ class DjangoMessagesConfig(AppConfig):
                 apps.app_configs = OrderedDict()
                 apps.apps_ready = apps.models_ready = apps.loading = apps.ready = False
                 apps.clear_cache()
-                apps.populate(settings.INSTALLED_APPS)
                 if app["templates"] != "":
                     settings.TEMPLATES[0]["DIRS"].append(
                         os.path.abspath(app["templates"].__path__._path[0])
                     )
+                static = os.path.abspath(
+                    importlib.import_module(app["name"]).__path__[0] + "/static/"
+                )
+                if os.path.isdir(static):
+                    settings.STATICFILES_DIRS += [static]
+                apps.populate(settings.INSTALLED_APPS)
                 if "setup" in app:
                     app["setup"]()
-        # static = os.path.abspath(
-        #     importlib.import_module(app["name"]).__path__[0] + "/static/"
-        # )
-        # if os.path.isdir(static):
-        #     sdir = True
-        #     settings.STATICFILES_DIRS += [static]
-
-        # if sdir:
-        #     call_command("collectstatic", verbosity=0, interactive=False)
-
-    # setup_apps()
+        try:
+            self.setup_apps()
+        except AttributeError:
+            pass
