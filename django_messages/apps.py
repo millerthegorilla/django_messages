@@ -24,11 +24,11 @@ class DjangoMessagesConfig(AppConfig):
         global my_apps
         try:
             if not settings.TOPLEVELCONFIG:
-                settings.TOPLEVELCONFIG = self.__name__
+                settings.TOPLEVELCONFIG = self.__class__
                 self.populate_my_apps()
                 self.install_apps()
         except AttributeError:
-            settings.TOPLEVELCONFIG = self.__name__
+            settings.TOPLEVELCONFIG = self.__class__
             self.populate_my_apps()
             self.install_apps()
 
