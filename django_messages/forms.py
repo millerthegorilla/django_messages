@@ -13,6 +13,7 @@ class Message(forms.ModelForm):
         model = messages_models.Message
         fields = [
             "text",
+            "author",
         ]
 
     def __init__(self, *args, **kwargs) -> None:
