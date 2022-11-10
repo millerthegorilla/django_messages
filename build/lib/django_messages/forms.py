@@ -31,8 +31,25 @@ class Message(forms.ModelForm):
         self.helper.form_class = "col-auto"
         self.helper.form_action = "django_messages:message_create"
 
+    def clean(self):
+        if self["text"].value() == "":
+            self.cleaned_data["text"] = self.initial["text"]
+            self.data = self.data.copy()
+            self.data["text"] = self.initial["text"]
+        return self.cleaned_data
+
     def clean_text(self) -> str:
-        return self.sanitize_text(self.cleaned_data["text"])
+        if self.cleaned_data["text"] and not self.sanitize_text(
+            self.cleaned_data["text"]
+        ):
+            if "text" in self.errors and type(self.errors["text"]) == list:
+                self.errors["text"].append("That is not allowed here")
+            else:
+                self.errors["text"] = [
+                    self.errors["text"] if "text" in self.errors else "",
+                    "That is not allowed here",
+                ]
+        return self.cleaned_data["text"]
 
     @staticmethod
     def sanitize_text(text: str) -> utils.safestring.SafeString:

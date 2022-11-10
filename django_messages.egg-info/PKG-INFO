@@ -3,12 +3,11 @@ Name: django-messages
 Version: 0.0.1
 Summary: A simple django app that adds basic messaging
 Home-page: https://github.com/millerthegorilla/django_messages
+Download-URL: https://github.com/millerthegorilla/django_messages
 Author: James Miller
 Author-email: jamesstewartmiller@gmail.com
 License: MIT
-Download-URL: https://github.com/millerthegorilla/django_messages
 Keywords: django,django_messages,messages app
-Platform: UNKNOWN
 Classifier: DevelopmentStatus::2-Pre-Alpha
 Classifier: Framework::Django CMS
 Classifier: Framework::Django::4.0
@@ -64,4 +63,3 @@ ATTRIBUTES = {
 django-crispy-forms==1.11.2
 crispy-bootstrap5==5.0.6
 bleach==3.3.0
-

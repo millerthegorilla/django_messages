@@ -38,9 +38,9 @@ class Message(soft_deletion.Model):
     def __repr__(self) -> str:
         return f"{self.text}"
 
-    def get_absolute_url(self, a_name="django_messages") -> str:
+    def get_absolute_url(self) -> str:
         return urls.reverse_lazy(
-            a_name + ":message_view", args=[self.id, self.slug]
+            "django_messages:message_view", args=[self.id, self.slug]
         )  # type: ignore
 
     def save(
