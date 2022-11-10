@@ -32,6 +32,7 @@ class Message(forms.ModelForm):
         self.helper.form_action = "django_messages:message_create"
 
     def clean(self):
+        super().clean()
         if self["text"].value() == "":
             self.cleaned_data["text"] = self.initial["text"]
             self.data = self.data.copy()
@@ -39,6 +40,7 @@ class Message(forms.ModelForm):
         return self.cleaned_data
 
     def clean_text(self) -> str:
+        super().clean_text()
         if self.cleaned_data["text"] and not self.sanitize_text(
             self.cleaned_data["text"]
         ):
