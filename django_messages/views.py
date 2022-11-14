@@ -38,6 +38,12 @@ class MessageUpdate(generic.UpdateView):
     template_name_suffix = "_create"
     extra_context = {"instructions": "Update your message..."}
 
+    def form_valid(self, form):
+        return super().form_valid()
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
 
 class MessageDelete(generic.edit.DeleteView):
     model = messages_models.Message
