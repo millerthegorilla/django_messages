@@ -1,4 +1,5 @@
 import bleach, html, logging, typing
+from bleach.css_sanitizer import CSSSanitizer
 
 from django import conf, urls, utils, db, shortcuts, http
 from django.core import exceptions, paginator as pagination
@@ -15,11 +16,12 @@ from . import forms as messages_forms
 logger = logging.getLogger('django_artisan')
 
 def sanitize_post_text(text: str) -> utils.safestring.SafeString:
+    css_sanitizer = CSSSanitizer(allowed_css_properties=conf.settings.STYLES)
     return utils.safestring.mark_safe(bleach.clean(html.unescape(text),
-                                  tags=conf.settings.ALLOWED_TAGS,
-                                  attributes=conf.settings.ATTRIBUTES,
-                                  styles=conf.settings.STYLES,
-                                  strip=True, strip_comments=True))
+                                      tags=conf.settings.ALLOWED_TAGS,
+                                      attributes=conf.settings.ATTRIBUTES,
+                                      css_sanitizer=css_sanitizer,
+                                      strip=True, strip_comments=True))
 
 
 @utils.decorators.method_decorator(cache.never_cache, name='dispatch')
