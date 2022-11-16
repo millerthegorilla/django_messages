@@ -2,3 +2,5 @@ venv
 venv/**/*
 mem_db
 */**/*pyc
+django_messages/__pycache__/
+django_messages/*/__pycache__/
