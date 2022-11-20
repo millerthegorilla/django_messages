@@ -40,9 +40,11 @@ class MessageUpdate(generic.UpdateView):
 
     def form_valid(self, form):
         return super().form_valid()
+        pass
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+        pass
 
 
 class MessageDelete(generic.edit.DeleteView):
