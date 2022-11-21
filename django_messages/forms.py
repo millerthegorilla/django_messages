@@ -40,7 +40,6 @@ class Message(forms.ModelForm):
         return self.cleaned_data
 
     def clean_text(self) -> str:
-        super().clean_text()
         if self.cleaned_data["text"] and not self.sanitize_text(
             self.cleaned_data["text"]
         ):
