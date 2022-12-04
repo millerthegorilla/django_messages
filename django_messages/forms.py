@@ -40,7 +40,7 @@ class Message(forms.ModelForm):
             self.cleaned_data["text"] = self.initial["text"]
             self.data = self.data.copy()
             self.data["text"] = self.initial["text"]
-        else:
+        elif self["text"].value() == "":
             self.errors["text"] = BLANK_TEXT_ERROR
         return self.cleaned_data
 
