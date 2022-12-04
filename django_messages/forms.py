@@ -10,6 +10,7 @@ from . import models as messages_models
 BLANK_TEXT_ERROR = "The message cannot be blank!"
 INVALID_TEXT_ERROR = "That is not allowed here."
 
+
 class Message(forms.ModelForm):
     class Meta:
         model = messages_models.Message
@@ -35,7 +36,7 @@ class Message(forms.ModelForm):
 
     def clean(self):
         super().clean()
-        if self["text"].value() == "" && self.initial["text"]:
+        if self["text"].value() == "" and self.initial["text"]:
             self.cleaned_data["text"] = self.initial["text"]
             self.data = self.data.copy()
             self.data["text"] = self.initial["text"]
