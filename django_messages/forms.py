@@ -7,6 +7,8 @@ import html
 
 from . import models as messages_models
 
+BLANK_TEXT_ERROR = "The message cannot be blank!"
+INVALID_TEXT_ERROR = "That is not allowed here."
 
 class Message(forms.ModelForm):
     class Meta:
@@ -33,10 +35,12 @@ class Message(forms.ModelForm):
 
     def clean(self):
         super().clean()
-        if self["text"].value() == "":
+        if self["text"].value() == "" && self.initial["text"]:
             self.cleaned_data["text"] = self.initial["text"]
             self.data = self.data.copy()
             self.data["text"] = self.initial["text"]
+        else:
+            self.errors["text"] = BLANK_TEXT_ERROR
         return self.cleaned_data
 
     def clean_text(self) -> str:
@@ -44,11 +48,11 @@ class Message(forms.ModelForm):
             self.cleaned_data["text"]
         ):
             if "text" in self.errors and type(self.errors["text"]) == list:
-                self.errors["text"].append("That is not allowed here")
+                self.errors["text"].append(INVALID_TEXT_ERROR)
             else:
                 self.errors["text"] = [
                     self.errors["text"] if "text" in self.errors else "",
-                    "That is not allowed here",
+                    INVALID_TEXT_ERROR,
                 ]
         return self.cleaned_data["text"]
 
