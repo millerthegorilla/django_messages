@@ -36,7 +36,7 @@ class Message(forms.ModelForm):
 
     def clean(self):
         super().clean()
-        if self["text"].value() == "" and "text" in self.initial[]:
+        if self["text"].value() == "" and "text" in self.initial:
             self.cleaned_data["text"] = self.initial["text"]
             self.data = self.data.copy()
             self.data["text"] = self.initial["text"]
