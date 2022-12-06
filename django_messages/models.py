@@ -16,6 +16,7 @@ class Message(soft_deletion.Model):
         auth.get_user_model(),
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="%(app_label)s_%(class)s_related",
     )
     text: models.TextField = models.TextField(max_length=500)

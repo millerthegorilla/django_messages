@@ -1,6 +1,7 @@
 ---
 - name: provisioning django_messages testapp
   hosts: localhost
+  connection: local
   tasks:
   - name: Create Redis Container
     containers.podman.podman_container:

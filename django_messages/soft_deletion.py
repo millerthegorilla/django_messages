@@ -77,7 +77,6 @@ class Model(models.Model):
                     id=str(self.id),
                 )
             except Exception as e:
-                breakpoint()
                 logger.error("unable to schedule task : {0}".format(str(e)))
 
     def hard_delete(self) -> None:

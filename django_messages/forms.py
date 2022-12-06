@@ -45,16 +45,16 @@ class Message(forms.ModelForm):
         return self.cleaned_data
 
     def clean_text(self) -> str:
-        if self.cleaned_data["text"] and not self.sanitize_text(
-            self.cleaned_data["text"]
-        ):
-            if "text" in self.errors and type(self.errors["text"]) == list:
-                self.errors["text"].append(INVALID_TEXT_ERROR)
+        if self.cleaned_data["text"]:
+            self.cleaned_data["text"] = self.sanitize_text(self.cleaned_data["text"])
+        if self.cleaned_data["text"] == "":
+            if "text" in self.errors:
+                try:
+                    self.errors["text"].append(INVALID_TEXT_ERROR)
+                except AttributeError:
+                    self.errors = [self.errors["text"], INVALID_TEXT_ERROR]
             else:
-                self.errors["text"] = [
-                    self.errors["text"] if "text" in self.errors else "",
-                    INVALID_TEXT_ERROR,
-                ]
+                self.errors["text"] = [INVALID_TEXT_ERROR]
         return self.cleaned_data["text"]
 
     @staticmethod

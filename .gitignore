@@ -6,3 +6,4 @@ django_messages/__pycache__/
 django_messages/*/__pycache__/
 db.sqlite3
 build/
+*/migrations/*
