@@ -2,4 +2,6 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-export PYTHON_PATH="${SCRIPT_DIR}"; pytest ${SCRIPT_DIR}/../tests
+${SCRIPT_DIR}/setup.sh
+
+export PYTHONPATH="${SCRIPT_DIR}/../../"; pytest ${SCRIPT_DIR}/../tests
