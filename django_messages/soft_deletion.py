@@ -70,11 +70,9 @@ class Model(models.Model):
                     schedule_type="O",
                     repeats=-1,
                     next_run=utils.timezone.now() + timeout,
-                    slug=self.slug,
-                    deleted_at=str(self.deleted_at),
-                    text=str(self),  # TODO test that the string repr of the model
-                    # is going to refer to it.
                     id=str(self.id),
+                    app_label=self._meta.app_label,
+                    model_name=self._meta.model_name,
                 )
             except Exception as e:
                 logger.error("unable to schedule task : {0}".format(str(e)))
